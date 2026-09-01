@@ -1,0 +1,155 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Reusable helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isFounderEmail() {
+      return isSignedIn() && request.auth.token.email != null && (
+        request.auth.token.email.lower() in [
+          'hodintplatform@gmail.com',
+          'mariberrouba@gmail.com',
+          'mariaberrouba@gmail.com',
+          'ikram.platform@gmail.com',
+          'samir.merdassi@univ-eloued.dz'
+        ]
+      );
+    }
+
+    function hasRole(role) {
+      return isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (getUserData().role == role);
+    }
+
+    function isFounder() {
+      return isFounderEmail() || (
+        isSignedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)) && (
+          getUserData().role in ['founder', 'FOUNDER', 'manager', 'MANAGER', 'supervisor', 'SUPERVISOR', 'admin', 'ADMIN']
+        )
+      );
+    }
+
+    function isAdmin() {
+      return isFounder();
+    }
+
+    function isExpert() {
+      return hasRole('expert') || hasRole('EXPERT') || isFounder();
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // 0. Content Collection (Articles, Crop Guides, Announcements)
+    match /content/{contentId} {
+      allow read: if true; // Publicly readable for platform visitors, farmers, students
+      allow create, update, delete: if isFounder();
+    }
+
+    // 0.1 Categories Collection (Content Sections & Tags)
+    match /categories/{categoryId} {
+      allow read: if true; // Publicly readable
+      allow create, update, delete: if isFounder();
+    }
+
+    // 1. Prices collection
+    match /prices/{priceId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 2. Weather Alerts
+    match /weatherAlerts/{alertId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 3. Service Providers
+    match /providers/{providerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 4. Products
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isSignedIn() && (hasRole('company') || isAdmin());
+      allow update, delete: if isSignedIn() && (hasRole('company') || isAdmin());
+    }
+
+    // 5. Courses (Founders/Admins can create, update, delete, public read)
+    match /courses/{courseId} {
+      allow read: if true;
+      allow create, update, delete: if isFounder();
+    }
+
+    // 5b. Course Progress (Students manage their own progress, Founders can view)
+    match /courseProgress/{progressId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+      allow delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+    }
+
+    // 5c. Certificates (Generated upon 100% course completion or by Founders)
+    match /certificates/{certId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+      allow create: if isSignedIn() && (request.resource.data.userId == request.auth.uid || isFounder());
+      allow update, delete: if isFounder();
+    }
+
+    // 6. Users collection
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if (isOwner(userId) && (!('role' in request.resource.data) || request.resource.data.role in ['user', 'student', 'farmer', 'worker', 'company', 'expert'] || isFounderEmail())) || isFounder();
+      allow update: if (isOwner(userId) && (request.resource.data.role == resource.data.role || isFounder())) || isFounder();
+      allow delete: if isFounder();
+    }
+
+    // 7. Inquiries
+    match /inquiries/{inquiryId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update: if isExpert();
+      allow delete: if isAdmin();
+    }
+
+    // 8. Service Requests
+    match /serviceRequests/{requestId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+      allow update, delete: if isSignedIn() && (request.auth.uid == resource.data.farmerId || isAdmin());
+    }
+
+    // 9. Favorites (User Bookmarks for Articles and Courses)
+    match /favorites/{favoriteId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+      allow delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isFounder());
+    }
+
+    // 10. Activity Logs (Founder Audit Trail)
+    match /activityLogs/{logId} {
+      allow read: if isFounder();
+      allow create: if isSignedIn();
+      allow update, delete: if isFounder();
+    }
+  }
+}

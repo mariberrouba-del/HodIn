@@ -1,0 +1,297 @@
+{
+  "entities": {
+    "MarketPrice": {
+      "title": "MarketPrice",
+      "description": "Daily market prices of agricultural products in El Oued",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nameAr": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "category": { "type": "string" },
+        "currentPrice": { "type": "number" },
+        "yesterdayPrice": { "type": "number" },
+        "trend": { "type": "string" },
+        "icon": { "type": "string" }
+      },
+      "required": ["id", "nameAr", "currentPrice"]
+    },
+    "WeatherAlert": {
+      "title": "WeatherAlert",
+      "description": "Agricultural and climate alert warnings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "titleAr": { "type": "string" },
+        "titleEn": { "type": "string" },
+        "severity": { "type": "string" },
+        "descriptionAr": { "type": "string" },
+        "descriptionEn": { "type": "string" },
+        "date": { "type": "string" }
+      },
+      "required": ["id", "type", "titleAr", "severity", "descriptionAr"]
+    },
+    "ServiceProvider": {
+      "title": "ServiceProvider",
+      "description": "Verified agricultural service providers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "specialty": { "type": "string" },
+        "experience": { "type": "number" },
+        "rating": { "type": "number" },
+        "phone": { "type": "string" },
+        "location": { "type": "string" },
+        "description": { "type": "string" },
+        "isVerified": { "type": "boolean" }
+      },
+      "required": ["id", "name", "specialty", "phone"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Agricultural equipment, seeds, and machinery for sale or rent",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "companyName": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "type": { "type": "string" },
+        "price": { "type": "number" },
+        "unit": { "type": "string" },
+        "description": { "type": "string" },
+        "phone": { "type": "string" },
+        "location": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "isAvailable": { "type": "boolean" }
+      },
+      "required": ["id", "title", "price", "phone"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Educational courses, modules, lessons, and training materials",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "thumbnail": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "level": { "type": "string" },
+        "duration": { "type": "string" },
+        "instructor": { "type": "string" },
+        "instructorRole": { "type": "string" },
+        "institution": { "type": "string" },
+        "modules": { "type": "array" },
+        "lessonsCount": { "type": "number" },
+        "videoUrl": { "type": "string" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "instructor", "description", "status"]
+    },
+    "CourseProgress": {
+      "title": "CourseProgress",
+      "description": "Student lesson completion and progress tracking across courses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "courseId": { "type": "string" },
+        "completedLessonIds": { "type": "array" },
+        "lastLessonId": { "type": "string" },
+        "lastLessonTitle": { "type": "string" },
+        "progressPercentage": { "type": "number" },
+        "isCompleted": { "type": "boolean" },
+        "completedAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "courseId", "completedLessonIds", "progressPercentage"]
+    },
+    "CourseCertificate": {
+      "title": "CourseCertificate",
+      "description": "Generated course completion certificates for verified student learners",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "certificateNumber": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "courseId": { "type": "string" },
+        "courseTitle": { "type": "string" },
+        "institution": { "type": "string" },
+        "instructor": { "type": "string" },
+        "issuedAt": { "type": "string" }
+      },
+      "required": ["id", "certificateNumber", "userId", "userName", "courseId", "courseTitle"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account registration details and roles",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "location": { "type": "string" },
+        "companyName": { "type": "string" },
+        "specialty": { "type": "string" },
+        "institution": { "type": "string" },
+        "academicYear": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Farmer inquiries and expert responses",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "text": { "type": "string" },
+        "reply": { "type": "string" },
+        "date": { "type": "string" },
+        "resolved": { "type": "boolean" }
+      },
+      "required": ["id", "name", "text"]
+    },
+    "FavoriteItem": {
+      "title": "FavoriteItem",
+      "description": "User bookmarked articles and courses stored in Firestore",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "itemType": { "type": "string" },
+        "itemId": { "type": "string" },
+        "title": { "type": "string" },
+        "category": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "description": { "type": "string" },
+        "authorOrInstructor": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "itemType", "itemId", "title"]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Founder and admin audit logs for content and system operations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "action": { "type": "string" },
+        "entityType": { "type": "string" },
+        "entityId": { "type": "string" },
+        "entityTitle": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "action", "entityType", "entityId", "timestamp"]
+    },
+    "ContentItem": {
+      "title": "ContentItem",
+      "description": "Founder-managed articles, crop guides, alerts, and platform announcements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "slug": { "type": "string" },
+        "description": { "type": "string" },
+        "body": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "categoryName": { "type": "string" },
+        "type": { "type": "string" },
+        "status": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "author": { "type": "string" },
+        "authorId": { "type": "string" },
+        "authorRole": { "type": "string" },
+        "isPublished": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "tags": { "type": "array" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "title", "description", "body", "categoryId", "type", "author"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Agricultural categories and platform content sections managed by founders",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "nameAr": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "slug": { "type": "string" },
+        "icon": { "type": "string" },
+        "description": { "type": "string" },
+        "order": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "nameAr", "slug"]
+    }
+  },
+  "firestore": {
+    "/content/{contentId}": {
+      "schema": "ContentItem",
+      "description": "Platform content, agricultural advice, articles, and founder guides"
+    },
+    "/categories/{categoryId}": {
+      "schema": "Category",
+      "description": "Platform content categories and agricultural classification sections"
+    },
+    "/prices/{priceId}": {
+      "schema": "MarketPrice",
+      "description": "Agricultural product current and historical market prices in El Oued"
+    },
+    "/weatherAlerts/{alertId}": {
+      "schema": "WeatherAlert",
+      "description": "Extreme weather, wind, or dust warnings customized for El Oued farms"
+    },
+    "/providers/{providerId}": {
+      "schema": "ServiceProvider",
+      "description": "Verified experts, technicians, and local farm labors"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Store listings of products, fertilizers, machinery for buy or rent"
+    },
+    "/courses/{courseId}": {
+      "schema": "Course",
+      "description": "E-learning platform courses, modules, lessons, and lectures"
+    },
+    "/courseProgress/{progressId}": {
+      "schema": "CourseProgress",
+      "description": "Student lesson completion and progress records per course"
+    },
+    "/certificates/{certId}": {
+      "schema": "CourseCertificate",
+      "description": "Issued academic course certificates upon 100% course completion"
+    },
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Platform members with designated application roles"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "Inquiry",
+      "description": "Farmer inquiries submitted for public/private review by agricultural experts"
+    },
+    "/favorites/{favoriteId}": {
+      "schema": "FavoriteItem",
+      "description": "Student and user bookmarks for articles, courses, and resources"
+    },
+    "/activityLogs/{logId}": {
+      "schema": "ActivityLog",
+      "description": "Audit trail and operational records for founder administrative actions"
+    }
+  }
+}

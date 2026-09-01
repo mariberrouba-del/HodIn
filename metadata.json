@@ -1,0 +1,6 @@
+{
+  "name": "HodInt - Agricultural Solutions Platform",
+  "description": "An integrated digital agricultural platform supporting farmers, engineering students, and experts in El Oued Province, Algeria, providing services, education, marketplace, daily prices, and smart AI assistance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
