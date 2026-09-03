@@ -794,7 +794,7 @@ async function startServer() {
     res.status(404).json({ success: false, error: "الرسالة المستهدفة للرد غير موجودة." });
   });
 
-  // API 6: Smart AI Assistant (Gemini 3.5 Flash server-side integration)
+  // API 6: Smart AI Assistant (Gemini 3.6 Flash server-side integration)
   app.post("/api/assistant", async (req, res) => {
     const { message, history } = req.body;
     if (!message) {
@@ -832,7 +832,7 @@ async function startServer() {
 
       // Structure format with system instructions
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.6-flash",
         contents: message,
         config: {
           systemInstruction: systemInstruction,
