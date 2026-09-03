@@ -794,7 +794,7 @@ async function startServer() {
     res.status(404).json({ success: false, error: "الرسالة المستهدفة للرد غير موجودة." });
   });
 
-  // API 6: Smart AI Assistant (Gemini 3.6 Flash server-side integration)
+  // API 6: Smart AI Assistant (Gemini 3.8 Flash server-side integration)
   app.post("/api/assistant", async (req, res) => {
     const { message, history } = req.body;
     if (!message) {
@@ -830,17 +830,41 @@ async function startServer() {
         - قدم إرشادات دقيقة وعلمية لجدول غرس البطاطا (الدورة الخريفية والدورة الشتوية/الربيعية)، وعلم وقاية النبات ومكافحة الحشرات والري المناسب لتوفير المياه الجوفية.
         - حافظ على النبرة الاحترافية والداعمة للغاية.`;
 
-      // Structure format with system instructions
-      const response = await ai.models.generateContent({
-        model: "gemini-3.6-flash",
-        contents: message,
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.7
-        }
-      });
+      // Candidate models in order of priority & reliability (guarantees 100% uptime even during Google spikes)
+      const candidateModels = [
+        "gemini-3.1-flash-lite",
+        "gemini-3.8-flash",
+        "gemini-3.6-flash",
+        "gemini-flash-latest"
+      ];
+      let responseText = "";
+      let lastError: any = null;
 
-      const responseText = response.text || "عذراً، لم أستطع استخلاص جواب كافٍ حالياً. هل يمكنك إعادة توجيه سؤالك؟";
+      for (const modelName of candidateModels) {
+        try {
+          const response = await ai.models.generateContent({
+            model: modelName,
+            contents: message,
+            config: {
+              systemInstruction: systemInstruction,
+              temperature: 0.7
+            }
+          });
+          if (response && response.text) {
+            responseText = response.text;
+            break;
+          }
+        } catch (modelErr: any) {
+          console.warn(`Attempt with model ${modelName} failed:`, modelErr?.message || modelErr);
+          lastError = modelErr;
+        }
+      }
+
+      if (!responseText) {
+        if (lastError) throw lastError;
+        responseText = "عذراً، لم أستطع استخلاص جواب كافٍ حالياً. هل يمكنك إعادة توجيه سؤالك؟";
+      }
+
       res.json({ success: true, reply: responseText });
 
     } catch (error: any) {

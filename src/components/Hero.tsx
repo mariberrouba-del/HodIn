@@ -34,7 +34,7 @@ export default function Hero({ onOpenFounders }: HeroProps) {
           </div>
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-slate-100 leading-tight">
-            بوابة رقمية متكاملة لابتكار <br className="hidden md:inline" />
+            بوابة رقمية متكاملة للابتكار <br className="hidden md:inline" />
             الفلاحة الصحراوية في <span className="bg-gradient-to-r from-emerald-400 via-amber-400 to-cyan-400 bg-clip-text text-transparent">ولاية الوادي</span>
           </h1>
 
